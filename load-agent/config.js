@@ -23,7 +23,7 @@ if (process.env.LEDGER == "bcovrin") {
   ledger = {
     genesisTransactions: ReadGenesisTransactions("./networks/CANdy.txn"),
     id: "CANdyDev",
-    indyNamespace: 'did:indy:candy:dev',
+    indyNamespace: 'candy:dev',
     isProduction: false,
     connectOnStartup: true,
   };
@@ -31,11 +31,20 @@ if (process.env.LEDGER == "bcovrin") {
   ledger = {
     genesisTransactions: ReadGenesisTransactions("./networks/indicio-test.txn"),
     id: "IndicioTest",
-    indyNamespace: 'did:indy:indicio:test',
+    indyNamespace: 'indicio:test',
+    isProduction: false,
+    connectOnStartup: true,
+  };
+} else if (process.env.LEDGER == "qc-beta") {
+  ledger = {
+    genesisTransactions: ReadGenesisTransactions("./networks/QC-beta.txn"),
+    id: "beta-qc-1",
+    indyNamespace: 'qc-test:test',
     isProduction: false,
     connectOnStartup: true,
   };
 }
+
 exports.mediation_url = process.env.MEDIATION_URL;
 exports.agent_ip = process.env.AGENT_IP;
 exports.verified_timeout_seconds = (process.env.VERIFIED_TIMEOUT_SECONDS || 120)
