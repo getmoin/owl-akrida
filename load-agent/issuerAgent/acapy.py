@@ -18,7 +18,7 @@ class AcapyIssuer(BaseIssuer):
                                 os.getenv("ISSUER_URL") + "/out-of-band/create-invitation?auto_accept=true", 
                                 json={
                                 "metadata": {}, 
-                                "handshake_protocols": ["https://didcomm.org/didexchange/1.1"]
+                                "handshake_protocols": ["https://didcomm.org/connections/1.0"]
                                 },
                                 headers=headers
                         )
@@ -94,9 +94,8 @@ class AcapyIssuer(BaseIssuer):
                                 "attributes": json.loads(os.getenv("CRED_ATTR")),
                                 },
                                 
-                                "issuer_did": issuer_did,
                                 "schema_id": os.getenv("SCHEMA"),
-                                "schema_issuer_did": schema_parts[0],
+                              
                                 "schema_name": schema_parts[2],
                                 "schema_version": schema_parts[3],
                                 "trace": True,
@@ -131,7 +130,9 @@ class AcapyIssuer(BaseIssuer):
                         "filter": {
                         "indy": {
                                 "cred_def_id": os.getenv("CRED_DEF"),
+                                "issuer_did": issuer_did,
                                 "schema_id": os.getenv("SCHEMA"),
+                                "schema_issuer_did": schema_parts[0],
                                 "schema_name": schema_parts[2],
                                 "schema_version": schema_parts[3]
                         }
@@ -223,14 +224,14 @@ class AcapyIssuer(BaseIssuer):
                 time.sleep(1)
 
                 r = requests.post(
-                        os.getenv("ISSUER_URL") + "/anoncreds/revocation/revoke",
+                        os.getenv("ISSUER_URL") + "/revocation/revoke",
                         json={
                                 "comment": "load test",
                                 "connection_id": connection_id,
                                 "cred_ex_id": credential_exchange_id,
                                 "notify": True,
                                 "notify_version": "v1_0",
-                                "publish": False
+                                "publish": True,
                         },
                         headers=headers,
                 )

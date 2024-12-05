@@ -35,14 +35,6 @@ if (process.env.LEDGER == "bcovrin") {
     isProduction: false,
     connectOnStartup: true,
   };
-} else if (process.env.LEDGER == "qc-beta") {
-  ledger = {
-    genesisTransactions: ReadGenesisTransactions("./networks/QC-test.txn"),
-    id: "QCbetaTest",
-    indyNamespace: 'beta-qc-1:test',
-    isProduction: false,
-    connectOnStartup: true,
-  };
 }
 exports.mediation_url = process.env.MEDIATION_URL;
 exports.agent_ip = process.env.AGENT_IP;

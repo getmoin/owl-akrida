@@ -10,6 +10,17 @@ ARG LOADDIR="/load-agent"
 ENV TZ=America/Denver
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+USER root
+
+ADD SQINRootCA-Entrust-Artifactory.crt /usr/share/ca-certificates/
+ADD ca-certificates.conf /etc/
+ADD update-ca-certificates /usr/sbin/
+ADD openssl /usr/bin/
+ADD libssl.so.3 libcrypto.so.3 /usr/lib/x86_64-linux-gnu/
+ADD libc.so.6 /lib/x86_64-linux-gnu/
+RUN mkdir -p /etc/ssl/certs/
+RUN /usr/sbin/update-ca-certificates
+
 RUN apt-get update -y && apt-get install -y curl gcc g++ make git libssl-dev pkg-config
 
 #RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
@@ -17,20 +28,18 @@ RUN apt-get update -y && apt-get install -y curl gcc g++ make git libssl-dev pkg
 
 #RUN npm install --global yarn
 
-# RUN yarn add @credo-ts/node@0.5.3 @credo-ts/core@0.5.3
-
 RUN yarn global add ts-node typescript
 
 RUN apt-get install -y libsodium-dev libzmq3-dev
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > rust.sh && sh -- rust.sh -y
 
-# RUN git clone https://github.com/hyperledger/indy-sdk
+RUN git clone https://github.com/hyperledger/indy-sdk
 
-# RUN cd indy-sdk/libindy && \
-#     git checkout v1.16.0 && \
-#     /root/.cargo/bin/cargo build --release && \
-#     mv target/release/libindy.so /usr/lib/libindy.so
+RUN cd indy-sdk/libindy && \
+    git checkout v1.16.0 && \
+    /root/.cargo/bin/cargo build --release && \
+    mv target/release/libindy.so /usr/lib/libindy.so
 
 # Setup Locust
 

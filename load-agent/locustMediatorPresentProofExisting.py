@@ -32,13 +32,13 @@ class UserBehaviour(SequentialTaskSet):
         connection = self.client.accept_invite(self.invite["invitation_url"])
         self.connection = connection
 
-    def receive_cred_2_0(self):
+    def receive_credential(self):
         self.client.ensure_is_running()
         # if not self.client.is_running():
         #     self.client.shutdown()
         #     self.on_start(self)
 
-        self.client.receive_credential_v_2_0(self.invite['connection_id'])
+        credential = self.client.receive_credential(self.invite["connection_id"])
 
     def get_verifier_invite(self):
         verifier_invite = self.client.verifier_getinvite()
@@ -54,7 +54,7 @@ class UserBehaviour(SequentialTaskSet):
         self.client.startup(withMediation=bool(WITH_MEDIATION))
         self.get_invite()
         self.accept_invite()
-        self.receive_cred_2_0()
+        self.receive_credential()
         self.get_verifier_invite()
         self.accept_verifier_invite()
 
@@ -74,7 +74,9 @@ class UserBehaviour(SequentialTaskSet):
 
             # Need connection id
             try:
-                presentation = self.client.presentation_exchange_2_0(self.verifier_invite['connection_id'])
+                presentation = self.client.presentation_exchange(
+                    self.verifier_invite["connection_id"]
+                )
                 presentation_not_complete = False
             except AssertionError as e:
                 if "JSONDecodeError" in presentation["result"]:

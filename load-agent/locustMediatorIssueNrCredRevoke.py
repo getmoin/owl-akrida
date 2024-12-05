@@ -36,16 +36,16 @@ class UserBehaviour(SequentialTaskSet):
         self.connection = connection
 
     @task
-    def receive_credential(self):
+    def receive_non_rev_credential(self):
         self.client.ensure_is_running()
 
-        self.credential = self.client.receive_credential(self.invite['connection_id'])
+        self.credential = self.client.receive_credential_non_revo(self.invite['connection_id'])
 
     @task
-    def revoke_credential(self):
+    def revoke_nr_credential(self):
         self.client.ensure_is_running()
 
-        self.client.revoke_credential(self.credential)
+        self.client.revoke_credential_non_revo(self.credential)
 
 class IssueRevoke(CustomLocust):
     tasks = [UserBehaviour]

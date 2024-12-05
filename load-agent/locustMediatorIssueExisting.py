@@ -19,16 +19,18 @@ class CustomLocust(User):
 class UserBehaviour(SequentialTaskSet):
     def on_start(self):
         self.client.startup(withMediation=bool(WITH_MEDIATION))
+        self.get_invite()
+        self.accept_invite()
 
     def on_stop(self):
         self.client.shutdown()
 
-    @task
+    
     def get_invite(self):
         invite = self.client.issuer_getinvite()
         self.invite = invite
 
-    @task
+    
     def accept_invite(self):
         self.client.ensure_is_running()
 
@@ -39,15 +41,9 @@ class UserBehaviour(SequentialTaskSet):
     def receive_credential(self):
         self.client.ensure_is_running()
 
-        self.credential = self.client.receive_credential(self.invite['connection_id'])
+        credential = self.client.receive_credential(self.invite['connection_id'])
 
-    @task
-    def revoke_credential(self):
-        self.client.ensure_is_running()
-
-        self.client.revoke_credential(self.credential)
-
-class IssueRevoke(CustomLocust):
+class Issue(CustomLocust):
     tasks = [UserBehaviour]
     wait_time = between(float(os.getenv('LOCUST_MIN_WAIT',0.1)), float(os.getenv('LOCUST_MAX_WAIT',1)))
 #    host = "example.com"
