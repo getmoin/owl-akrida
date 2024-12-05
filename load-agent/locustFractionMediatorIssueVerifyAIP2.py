@@ -35,19 +35,23 @@ class UserBehaviour(SequentialTaskSet):
         connection = self.client.accept_invite(self.invite['invitation_url'])
         self.connection = connection
 
-    @task
+    @task(3)
     def receive_cred_2_0(self):
         self.client.ensure_is_running()
-
-        self.credential = self.client.receive_credential_v_2_0(self.invite['connection_id'])
+        print("Connection Id: ", self.invite['connection_id'])
         
-    @task
-    def revoke_credential(self):
+        self.client.receive_credential_v_2_0(self.invite['connection_id'])
+
+    @task(1)
+    def presentation_exchange_2_0(self):
         self.client.ensure_is_running()
+        print("Connection Id: ", self.invite['connection_id'])
 
-        self.client.revoke_credential(self.credential)
+        self.client.presentation_exchange_2_0(self.invite['connection_id'])
 
-class IssueRevoke(CustomLocust):
+
+class Issue(CustomLocust):
     tasks = [UserBehaviour]
     wait_time = between(float(os.getenv('LOCUST_MIN_WAIT',0.1)), float(os.getenv('LOCUST_MAX_WAIT',1)))
 #    host = "example.com"
+

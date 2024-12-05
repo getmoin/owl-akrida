@@ -24,30 +24,45 @@ class UserBehaviour(SequentialTaskSet):
         self.client.shutdown()
 
     @task
-    def get_invite(self):
+    def get_issuer_invite(self):
         invite = self.client.issuer_getinvite()
         self.invite = invite
 
     @task
-    def accept_invite(self):
+    def accept_issuer_invite(self):
         self.client.ensure_is_running()
 
         connection = self.client.accept_invite(self.invite['invitation_url'])
         self.connection = connection
 
     @task
-    def receive_cred_2_0(self):
+    def receive_credentialVer2_0(self):
         self.client.ensure_is_running()
 
-        self.credential = self.client.receive_credential_v_2_0(self.invite['connection_id'])
-        
+        credential = self.client.receive_credential_v_2_0(self.invite['connection_id'])
+
     @task
-    def revoke_credential(self):
+    def get_verifier_invite(self):
+        verifier_invite = self.client.verifier_getinvite()
+        self.verifier_invite = verifier_invite
+
+    @task
+    def accept_verifier_invite(self):
         self.client.ensure_is_running()
 
-        self.client.revoke_credential(self.credential)
+        verifier_connection = self.client.accept_invite(self.verifier_invite['invitation_url'])
+        self.verifier_connection = verifier_connection
 
-class IssueRevoke(CustomLocust):
+    @task
+    def presentation_exchange_2_0(self):
+        self.client.ensure_is_running()
+
+        # Need connection id
+        presentation = self.client.presentation_exchange_2_0(self.verifier_invite['connection_id'])
+
+
+class Issue(CustomLocust):
     tasks = [UserBehaviour]
     wait_time = between(float(os.getenv('LOCUST_MIN_WAIT',0.1)), float(os.getenv('LOCUST_MAX_WAIT',1)))
 #    host = "example.com"
+
