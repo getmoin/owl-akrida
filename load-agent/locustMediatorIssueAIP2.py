@@ -18,9 +18,11 @@ class CustomLocust(User):
 
 class UserBehaviour(SequentialTaskSet):
     def on_start(self):
+        print("Started process")
         self.client.startup(withMediation=bool(WITH_MEDIATION))
 
     def on_stop(self):
+        print("end process")
         self.client.shutdown()
 
     @task

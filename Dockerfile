@@ -10,7 +10,7 @@ ARG LOADDIR="/load-agent"
 ENV TZ=America/Denver
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update -y && apt-get install -y curl gcc g++ make git libssl-dev pkg-config vim nano
+RUN apt-get update -y && apt-get install -y curl gcc g++ make git libssl-dev pkg-config vim nano cpulimit
 
 #RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
 #RUN apt-get update -y && apt-get install -y nodejs

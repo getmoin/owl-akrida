@@ -448,9 +448,12 @@ let receiveCredential = async (agent) => {
     switch (payload.credentialRecord.state) {
       case CredentialState.OfferReceived:
         // custom logic here
+        try {
         await agent.credentials.acceptOffer({
-          credentialRecordId: payload.credentialRecord.id,
-        })
+          credentialRecordId: payload.credentialRecord.id,        
+        })} catch (error) {
+          process.stderr.write('******** ERROR AT RC PAYLOAD'+ '\n' + error + '\n')
+        }
         break
       case CredentialState.CredentialReceived:
         // For demo purposes we exit the program here.

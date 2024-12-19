@@ -42,6 +42,9 @@ if (process.env.LEDGER == "bcovrin") {
     indyNamespace: 'beta-qc-1:test',
     isProduction: false,
     connectOnStartup: true,
+    poolConfig: {
+      timeout: 60000
+    }
   };
 }
 exports.mediation_url = process.env.MEDIATION_URL;
