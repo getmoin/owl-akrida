@@ -305,10 +305,7 @@ class CustomClient:
     @stopwatch
     def receive_credential_v_2_0(self, connection_id):
         self.run_command({"cmd": "receiveCredential"})
-        print(f" testing receive creddential in locust client file before call")
-        print(f" connection_id: {connection_id}")
         r = self.issuer.issue_credential_ver2_0(connection_id)
-        print(f" testing receive creddential in locust client file after call")
         line = self.readjsonline()
 
         return r
