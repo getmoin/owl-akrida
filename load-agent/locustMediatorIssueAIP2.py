@@ -17,13 +17,17 @@ class CustomLocust(User):
         self.client = CustomClient(self.host)
 
 class UserBehaviour(SequentialTaskSet):
+    credentials_issued = 0
+    
     def on_start(self):
         print("Started process")
         self.client.startup(withMediation=bool(WITH_MEDIATION))
 
     def on_stop(self):
         print("end process")
+        print(f"Total credentials issued in this session: {UserBehaviour.credentials_issued}")
         self.client.shutdown()
+        self.interrupt()
 
     @task
     def get_invite(self):
@@ -42,8 +46,10 @@ class UserBehaviour(SequentialTaskSet):
         self.client.ensure_is_running()
 
         self.client.receive_credential_v_2_0(self.invite['connection_id'])
+        UserBehaviour.credentials_issued += 1
 
 class Issue(CustomLocust):
     tasks = [UserBehaviour]
     wait_time = between(float(os.getenv('LOCUST_MIN_WAIT',0.1)), float(os.getenv('LOCUST_MAX_WAIT',1)))
+    fixed_count = 1
 #    host = "example.com"
