@@ -24,13 +24,11 @@ class UserBehaviour(SequentialTaskSet):
         self.get_invite()
 
         self.accept_invite()
-    
-    @task
+
     def get_invite(self):
         invite = self.client.issuer_getinvite()
         self.invite = invite
 
-    @task
     def accept_invite(self):
         self.client.ensure_is_running()
 

@@ -37,15 +37,12 @@ class UserBehaviour(SequentialTaskSet):
 
     @task(3)
     def receive_cred_2_0(self):
-        self.client.ensure_is_running()
-        print("Connection Id: ", self.invite['connection_id'])
-        
+        self.client.ensure_is_running()        
         self.client.receive_credential_v_2_0(self.invite['connection_id'])
 
     @task(1)
     def presentation_exchange(self):
         self.client.ensure_is_running()
-        print("Connection Id: ", self.invite['connection_id'])
 
         self.client.presentation_exchange_2_0(self.invite['connection_id'])
 
